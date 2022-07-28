@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { userDeleted } from "./usersSlice";
+import { userDeleted, fetchUsers } from "./usersSlice";
 
 export function UserList() {
-  const entities = useSelector((state) => state.users);
-  console.log(entities);
+  const { users } = useSelector((state) => state.users);
+  console.log(users);
 
   const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ export function UserList() {
       </div>
       <div className="row">
         <div className="two columns">
-            <button className="button-primary">Load Users</button>
+            <button onClick={() => dispatch(fetchUsers())} className="button-primary">Load Users</button>
         </div>
         <div className="two columns">
             <Link to="/add-user">
@@ -42,7 +42,7 @@ export function UserList() {
                 </tr>
             </thead>
             <tbody>
-                {entities && entities.map((item, i) => (
+                {users && users.map((item, i) => (
                   <tr key={i}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>

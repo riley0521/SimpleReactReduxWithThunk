@@ -5,9 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from "react-redux";
 import store from "./store";
+import { fetchUsers } from "./features/users/usersSlice";
 
+store.dispatch(fetchUsers());
 ReactDOM.render(
   <Provider store={store}>
+    
     <App />
   </Provider>,
   document.getElementById("root")

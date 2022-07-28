@@ -1,13 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const initialState = [
-    { id: "1", name: "John Doe", email: "johndoe@test.com" },
-    { id: "2", name: "Jane Doe", email: "janedoe@test.com" },
-];
+export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    const users = await response.json();
+    return users;
+});
 
 const usersSlice = createSlice({
     name: "users",
-    initialState,
+    initialState: {
+        users: [],
+        loading: false
+    },
     reducers: {
         userAdded(state, action) {
             state.push(action.payload);
@@ -26,6 +30,18 @@ const usersSlice = createSlice({
             if(existingUser) {
                 return state.filter((user) => user.id !== id);
             }
+        }
+    },
+    extraReducers: {
+        [fetchUsers.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [fetchUsers.fulfilled]: (state, action) => {
+            state.loading = false;
+            state.users = [...state.users, ...action.payload];
+        },
+        [fetchUsers.rejected]: (state, action) => {
+            state.loading = false;
         }
     },
 });
